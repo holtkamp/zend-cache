@@ -252,6 +252,8 @@ class Zend_Cache_Backend_Static
             $result = file_put_contents($file, $data);
         }
         @chmod($file, $this->_octdec($this->_options['cache_file_perm']));
+        
+        touch($file, strtotime('today midnight')); //20160825MH: HACK to make all modifications seem to be at midnight, this way we can expire after 24 hours, absolute cache expiry seems impossible
 
         if ($this->_tagged === null && $tagged = $this->getInnerCache()->load(self::INNER_CACHE_NAME)) {
             $this->_tagged = $tagged;
